@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Se connecter</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn-submit:hover {
+      background-color: #005ea2;
+    }
+
+    .link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .link a {
+      color: #0078d4;
+      text-decoration: none;
+    }
+
+    .messages {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .messages .error {
+      background-color: #ffe0e0;
+      color: #a94442;
+      border: 1px solid #f5c6cb;
+    }
+
+    .messages .success {
+      background-color: #e0ffe0;
+      color: #3c763d;
+      border: 1px solid #c3e6cb;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 38px;
+      cursor: pointer;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Se connecter</h2>
+
+    <!-- Messages Django -->
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      
+      <!-- Username -->
+      <div class="form-group">
+        <label for="id_username">Nom d'utilisateur ou Email</label>
+        {{ form.username }}
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="id_password">Mot de passe</label>
+        <div class="password-wrapper">
+          {{ form.password }}
+          <span class="eye-icon" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Se connecter</button>
+    </form>
+
+    <p class="link">Pas encore de compte ? <a href="{% url 'signup' %}">S'inscrire</a></p>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById("id_password");
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+      } else {
+        passwordInput.type = "password";
+      }
+    }
+  </script>
+</body>
+</html>
