@@ -1,11 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class User(models.Model):
-    username = models.CharField(max_length=100, unique=True)
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    
+
+
+class User(AbstractUser):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self):

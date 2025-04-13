@@ -53,7 +53,8 @@
     }
 
     .nav-links a,
-    .mode-switch {
+    .mode-switch,
+    .nav-profile {
       color: white;
       background: none;
       border: none;
@@ -149,8 +150,13 @@
   <header>
     <a class="logo" href="#">📊 Tableau de bord</a>
     <div class="nav-links">
-      <a href="/login">Se connecter</a>
-      <a href="/signup">S’inscrire</a>
+      {% if user.is_authenticated %}
+        <a href="/profile" class="nav-profile">👤 Profil</a>
+        <a href="/logout">Se déconnecter</a>
+      {% else %}
+        <a href="/login">Se connecter</a>
+        <a href="/signup">S’inscrire</a>
+      {% endif %}
       <button class="mode-switch" onclick="toggleTheme()">🌗 Mode</button>
     </div>
   </header>
@@ -163,13 +169,17 @@
     <section id="dashboard" class="section active">
       <h2>Bienvenue sur votre tableau Power BI</h2>
       <p>Le tableau ne peut pas être affiché ici. Cliquez ci-dessous :</p>
-      <a href="https://app.powerbi.com/reportEmbed?reportId=a4d966bf-5278-4f87-bc6b-c6657faaeaf7&autoAuth=true&ctid=fab8a9e0-a3f5-4731-b7d2-97de14f95161"
-        target="_blank" class="btn-blue">
-        Ouvrir dans un nouvel onglet
-      </a>
+      
+      {% if user.is_authenticated %}
+        <a href="https://app.powerbi.com/reportEmbed?reportId=a4d966bf-5278-4f87-bc6b-c6657faaeaf7&autoAuth=true&ctid=fab8a9e0-a3f5-4731-b7d2-97de14f95161"
+          target="_blank" class="btn-blue">
+          Ouvrir dans un nouvel onglet
+        </a>
+      {% else %}
+        <p>Vous devez être connecté pour accéder au tableau de bord.</p>
+      {% endif %}
     </section>
 
-    <!-- SECTION SERVICES -->
     <section id="services" class="section">
       <h2>Nos Services</h2>
       <p>Chez <strong>Online Retail UK Ltd</strong>, nous proposons une large gamme de produits pour professionnels et particuliers. Nos services incluent :</p>
@@ -182,7 +192,6 @@
       </ul>
     </section>
 
-    <!-- SECTION CONTACT -->
     <section id="contact" class="section">
       <h2>Contactez-nous</h2>
       <p><strong>Online Retail UK Ltd</strong></p>
@@ -205,7 +214,7 @@
         <div class="team-member">
           <img src="{% static 'images/AhmedHatimFasih.jpg' %}" alt="Ahmed Hatim Fasih">
           <h4>Ahmed Hatim Fasih</h4>
-          <p><strong>Responsable : Power BI & Developpement App Web</strong></p>
+          <p><strong>Responsable : Power BI & Developpement  Web</strong></p>
           <p>Email : hatimfasih2005@gmail.com</p>
           <p>Téléphone : +212 641423700</p>
           <p>Adresse : Mhamid, Marrakech</p>
@@ -213,8 +222,8 @@
         <div class="team-member">
           <img src="{% static 'images/MohamedLouizi.jpg' %}" alt="Mohamed Louizi">
           <h4>Mohamed Louizi</h4>
-          <p><strong>Responsable : Elaboration et Modelisation des données</strong></p>
-          <p>Email : mlouizi723@gmail.com/p>
+          <p><strong>Responsable : Elaboration & Modelisation des données</strong></p>
+          <p>Email : mlouizi723@gmail.com</p>
           <p>Téléphone : +212 688515853</p>
           <p>Adresse : Sidi Bouzid, Asfi</p>
         </div>
@@ -253,15 +262,9 @@
 
     function setUnderlinePosition(button) {
       const rect = button.getBoundingClientRect();
-      const containerRect = navContainer.getBoundingClientRect();
       underline.style.width = `${rect.width}px`;
-      underline.style.left = `${rect.left - containerRect.left}px`;
+      underline.style.left = `${rect.left - navContainer.getBoundingClientRect().left}px`;
     }
-
-    window.addEventListener('resize', () => {
-      const activeBtn = document.querySelector('.nav-buttons button.active');
-      if (activeBtn) setUnderlinePosition(activeBtn);
-    });
   </script>
 </body>
 </html>

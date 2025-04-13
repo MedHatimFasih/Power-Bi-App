@@ -7,26 +7,27 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import SignupForm
-
+from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # PAS ton modèle personnalisé
+from django.contrib.auth import login
+from django.contrib import messages
 
 
 def home(request):
     return render(request, 'home.html')
 
 
-def signup(request):
-    return render(request, 'signup.html')
 
 
-# Inscription
 
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 import re
-from .models import User  # Assure-toi que ce chemin est correct
+from .models import User  
 
+# Inscription
 def signup_view(request):
     if request.method == "POST":
         first_name = request.POST["first_name"]
@@ -89,14 +90,42 @@ def login_view(request):
 
     return render(request, 'login.html', {'form': form})
 
-# Déconnexion
-def logout_view(request):
+
+def user_logout(request):
     logout(request)
-    messages.info(request, "Déconnexion réussie.")
-    return redirect('login')
+    return redirect('home')
 
 
 def powerbi_view(request):
     powerbi_url = "https://app.powerbi.com/reportEmbed?reportId=a4d966bf-5278-4f87-bc6b-c6657faaeaf7&autoAuth=true&ctid=fab8a9e0-a3f5-4731-b7d2-97de14f95161"  # Remplace avec ton lien Power BI
     return render(request, "powerbi.html", {"powerbi_url":powerbi_url})
 
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .forms import ProfileForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+
+# Profile
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user)
+        pwd_form = PasswordChangeForm(user=request.user, data=request.POST)
+
+        if form.is_valid() and pwd_form.is_valid():
+            form.save()
+            pwd_form.save()
+            update_session_auth_hash(request, pwd_form.user)  # garde la session active
+            messages.success(request, 'Profil mis à jour avec succès.')
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=request.user)
+        pwd_form = PasswordChangeForm(user=request.user)
+
+    return render(request, 'profile.html', {
+        'form': form,
+        'pwd_form': pwd_form
+    })

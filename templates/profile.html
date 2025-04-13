@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profil - Tableau de bord</title>
+  <style>
+    :root {
+      --blue: #0078d4;
+      --bg-light: #ffffff;
+      --text-light: #000000;
+      --bg-dark: #121212;
+      --text-dark: #ffffff;
+    }
+
+    [data-theme="light"] {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    [data-theme="dark"] {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background-color: var(--blue);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links a,
+    .mode-switch {
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .mode-switch {
+      background-color: white;
+      color: black;
+      border-radius: 20px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+    }
+
+    main {
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    form {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .btn-blue {
+      background-color: var(--blue);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="/">📊 Tableau de bord</a>
+    <div class="nav-links">
+      <a href="/">Accueil</a>
+      <a href="/logout">Se déconnecter</a>
+      <button class="mode-switch" onclick="toggleTheme()">🌗 Mode</button>
+    </div>
+  </header>
+
+  <main>
+    <h2>Mon Profil</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <label for="first_name">Prénom</label>
+      <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+
+      <label for="last_name">Nom</label>
+      <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+
+      <label for="username">Nom d'utilisateur</label>
+      <input type="text" id="username" name="username" value="{{ user.username }}" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+      <label for="phone">Numéro de téléphone</label>
+      <input type="text" id="phone" name="phone" value="{{ profile.phone }}">
+
+      <button type="submit" class="btn-blue">Mettre à jour</button>
+    </form>
+  </main>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "light" ? "dark" : "light");
+    }
+  </script>
+</body>
+</html>
